@@ -12,6 +12,7 @@
     <style>
         :root {
             --bg-color: #f0f2f5;
+            --tile-color: #ffffff;
             --text-light: #ffffff;
             --text-dark: #1c1e21;
         }
@@ -38,7 +39,7 @@
             gap: 12px; 
             width: 100%; 
             max-width: 450px; 
-            margin-bottom: 100px; /* Miejsce na logo w rogu */
+            margin-bottom: 100px; 
         }
         .tile { 
             padding: 20px 18px; 
@@ -48,28 +49,26 @@
             font-size: 17px;
             display: flex;
             align-items: center;
-            color: var(--text-light); /* Biały tekst jak na grafice */
+            color: var(--text-light);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.1s;
-            text-transform: uppercase; /* Wielkie litery jak na grafice */
+            text-transform: uppercase;
         }
         .tile:active {
             transform: scale(0.97);
             filter: brightness(0.9);
         }
         
-        /* KOLORY IDENTYCZNE JAK NA GRAFICE */
-        .bg-blue { background-color: #448aff; }   /* Granica -> Knurów */
-        .bg-green { background-color: #4caf50; }  /* Granica -> Szkoła */
-        .bg-yellow { background-color: #ffc107; } /* Szkoła -> Dom */
-        .bg-red { background-color: #e53935; }    /* Poczta -> Dom */
-        
-        /* DODATKOWE KOLORY DLA RYBNEJ */
-        .bg-purple { background-color: #9c27b0; } /* Rybna -> Knurów */
-        .bg-orange { background-color: #ff9800; } /* Rybna -> Gierałtowice */
+        /* KOLORY ZGODNE Z GRAFIKĄ */
+        .bg-blue { background-color: #448aff; }   
+        .bg-green { background-color: #4caf50; }  
+        .bg-purple { background-color: #9c27b0; } 
+        .bg-orange { background-color: #ff9800; } 
+        .bg-yellow { background-color: #ffc107; } 
+        .bg-red { background-color: #e53935; }    
 
         .icon {
-            background: rgba(255, 255, 255, 0.2); /* Przezroczyste białe tło dla ikony */
+            background: rgba(255, 255, 255, 0.2);
             width: 44px;
             height: 44px;
             border-radius: 12px;
@@ -85,7 +84,7 @@
             font-size: 20px;
         }
 
-        /* PRZYCISK GRUPY */
+        /* PRZYCISK GRUPY FB */
         .fb-button {
             position: fixed;
             bottom: 25px;
@@ -114,37 +113,37 @@
     <div class="grid">
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile bg-blue" target="_blank">
             <div class="icon">🏁</div>
-            <span>Granica do Knurowa</span>
+            <span>Granica &rarr; Knurowa</span>
             <div class="arrow">›</div>
         </a>
         
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile bg-green" target="_blank">
             <div class="icon">🎒</div>
-            <span>Granica do Gierałtowic</span>
+            <span>Granica &rarr; Gierałtowic</span>
             <div class="arrow">›</div>
         </a>
 
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8253/" class="tile bg-purple" target="_blank">
             <div class="icon">🏭</div>
-            <span>Rybna do Knurowa</span>
+            <span>Rybna &rarr; Knurowa</span>
             <div class="arrow">›</div>
         </a>
         
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8254/" class="tile bg-orange" target="_blank">
             <div class="icon">🐟</div>
-            <span>Rybna do Gierałtowic</span>
+            <span>Rybna &rarr; Gierałtowic</span>
             <div class="arrow">›</div>
         </a>
         
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile bg-yellow" target="_blank">
             <div class="icon">🏠</div>
-            <span>Gierałtowice Szkoła do domu</span>
+            <span>Gierałtowice szkoła &rarr; Domu</span>
             <div class="arrow">›</div>
         </a>
         
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile bg-red" target="_blank">
             <div class="icon">📮</div>
-            <span>Knurów Poczta do domu</span>
+            <span>Knurów poczta &rarr; Domu</span>
             <div class="arrow">›</div>
         </a>
     </div>
