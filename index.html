@@ -24,6 +24,7 @@
             align-items: center; 
             padding: 20px;
             margin: 0;
+            min-height: 100vh; /* Zapewnia wysokość całej strony */
         }
         h2 { 
             color: var(--text-color); 
@@ -72,6 +73,35 @@
             color: #ccc;
             font-size: 20px;
         }
+
+        /* --- STYL DLA PRZYCISKU FB --- */
+        .fb-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 0.2s;
+            border: 2px solid #0052cc;
+            overflow: hidden; /* Żeby logo nie wystawało */
+        }
+
+        .fb-button:active {
+            transform: scale(0.9);
+        }
+
+        .fb-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Dopasowuje zdjęcie do koła */
+        }
     </style>
 </head>
 <body>
@@ -79,30 +109,34 @@
     <h2>ROZKŁADY FARSKIE POLA</h2>
     
     <div class="grid">
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile">
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile" target="_blank">
             <div class="icon">🏁</div>
             <span>Granica do Knurowa</span>
             <div class="arrow">›</div>
         </a>
         
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile">
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile" target="_blank">
             <div class="icon">🎒</div>
             <span>Granica do szkoły</span>
             <div class="arrow">›</div>
         </a>
         
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile">
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile" target="_blank">
             <div class="icon">🏠</div>
             <span>Szkoła do domu</span>
             <div class="arrow">›</div>
         </a>
         
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile">
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile" target="_blank">
             <div class="icon">📮</div>
             <span>Poczta do domu</span>
             <div class="arrow">›</div>
         </a>
     </div>
+
+    <a href="https://www.facebook.com/groups/1190086025805323" target="_blank" class="fb-button">
+        <img src="logo.jpg" alt="FB">
+    </a>
 
 </body>
 </html>
