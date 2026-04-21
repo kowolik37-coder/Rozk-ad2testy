@@ -24,13 +24,14 @@
             align-items: center; 
             padding: 20px;
             margin: 0;
-            min-height: 100vh; /* Zapewnia wysokość całej strony */
+            min-height: 100vh;
         }
         h2 { 
             color: var(--text-color); 
             margin-top: 40px;
             margin-bottom: 25px;
             font-weight: 700;
+            text-align: center;
         }
         .grid { 
             display: grid; 
@@ -38,6 +39,7 @@
             gap: 12px; 
             width: 100%; 
             max-width: 450px; 
+            margin-bottom: 80px; /* Miejsce, żeby kafelki nie chowały się pod logo */
         }
         .tile { 
             background: var(--tile-color); 
@@ -74,33 +76,33 @@
             font-size: 20px;
         }
 
-        /* --- STYL DLA PRZYCISKU FB --- */
+        /* STYL DLA PRZYCISKU GRUPY */
         .fb-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             background-color: white;
             border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             transition: transform 0.2s;
-            border: 2px solid #0052cc;
-            overflow: hidden; /* Żeby logo nie wystawało */
+            border: 2px solid var(--accent-color);
+            overflow: hidden;
         }
 
         .fb-button:active {
-            transform: scale(0.9);
+            transform: scale(0.85);
         }
 
         .fb-button img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Dopasowuje zdjęcie do koła */
+            object-fit: cover;
         }
     </style>
 </head>
@@ -132,10 +134,22 @@
             <span>Poczta do domu</span>
             <div class="arrow">›</div>
         </a>
+
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8254/" class="tile" target="_blank">
+            <div class="icon">🐟</div>
+            <span>Rybna do Gierałtowic</span>
+            <div class="arrow">›</div>
+        </a>
+
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8253/" class="tile" target="_blank">
+            <div class="icon">🏭</div>
+            <span>Rybna do Knurowa</span>
+            <div class="arrow">›</div>
+        </a>
     </div>
 
     <a href="https://www.facebook.com/groups/1190086025805323" target="_blank" class="fb-button">
-        <img src="logo.jpg" alt="FB">
+        <img src="logo.jpg" alt="Grupa Farskie Pola">
     </a>
 
 </body>
