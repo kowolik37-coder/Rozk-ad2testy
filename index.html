@@ -4,69 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Rozkłady GZM</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>GZM Live</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3448/3448339.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3448/3448339.png">
+    
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .header { font-size: 22px; font-weight: bold; margin: 10px 0 20px 0; text-align: center; color: #1a1a1a; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        
         .tile { 
-            background: white; border-radius: 12px; padding: 20px; 
+            background: white; border-radius: 16px; padding: 18px; 
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-decoration: none; color: #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; color: #333;
+            border-left: 8px solid #ffcc00; transition: transform 0.1s;
         }
-        .stop-info { display: flex; flex-direction: column; }
-        .name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-        .realtime { color: #d32f2f; font-weight: bold; font-size: 18px; text-align: right; }
-        .line { background: #ffcc00; padding: 2px 6px; border-radius: 4px; font-size: 14px; margin-right: 5px; }
+        .tile:active { transform: scale(0.97); }
+        
+        .stop-info { display: flex; flex-direction: column; flex: 1; }
+        .name { font-weight: 700; font-size: 16px; color: #2c3e50; }
+        .label { font-size: 11px; color: #95a5a6; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .realtime { text-align: right; min-width: 90px; }
+        .line { background: #333; color: white; padding: 4px 8px; border-radius: 6px; font-size: 14px; font-weight: bold; margin-right: 6px; display: inline-block; vertical-align: middle; }
+        .time { color: #d32f2f; font-weight: 800; font-size: 19px; display: inline-block; vertical-align: middle; }
+        
+        .loading { color: #bdc3c7; font-style: italic; font-size: 13px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
+    <div class="header">GZM Live - Twoje Odjazdy</div>
+    
     <div class="grid">
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile">
             <div class="stop-info">
-                <span class="name">Granica → Knurów</span>
-                <small>Kliknij po pełny rozkład</small>
+                <span class="name">Granica → Knurowa</span>
+                <span class="label">Pełny rozkład ↗</span>
             </div>
-            <div class="realtime" id="val-723">...</div>
+            <div class="realtime" id="val-723"><span class="loading">Sprawdzam...</span></div>
         </a>
+
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile">
             <div class="stop-info">
                 <span class="name">Granica → Szkoła</span>
+                <span class="label">Pełny rozkład ↗</span>
             </div>
-            <div class="realtime" id="val-724">...</div>
+            <div class="realtime" id="val-724"><span class="loading">...</span></div>
         </a>
+
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile">
             <div class="stop-info">
                 <span class="name">Szkoła → Dom</span>
+                <span class="label">Pełny rozkład ↗</span>
             </div>
-            <div class="realtime" id="val-725">...</div>
+            <div class="realtime" id="val-725"><span class="loading">...</span></div>
         </a>
+
         <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile">
             <div class="stop-info">
                 <span class="name">Poczta → Dom</span>
+                <span class="label">Pełny rozkład ↗</span>
             </div>
-            <div class="realtime" id="val-3704">...</div>
+            <div class="realtime" id="val-3704"><span class="loading">...</span></div>
         </a>
     </div>
 
     <script>
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwMPI5S4T7QVtQY2akxZYSnc584uHTYL3l0wvIM1ZcIgmQ4wxpiu9DQnm5iSg6Rv9E/exec';
+        // Twój link ze skryptu Google Apps Script
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwSou13l30JxLNszhQP0VbPXHM2e1cVGJZzEsfCIk1ljA_4eARNY9kb1kiAguahdn4/exec';
         const stops = ['723', '724', '725', '3704'];
 
-        async function refreshData() {
-            stops.forEach(async (id) => {
-                try {
-                    const response = await fetch(`${scriptUrl}?stopId=${id}`);
-                    const data = await response.json();
-                    document.getElementById(`val-${id}`).innerHTML = 
-                        `<span class="line">${data.line}</span> ${data.time}`;
-                } catch (e) {
-                    document.getElementById(`val-${id}`).innerText = '--';
+        async function fetchLive(stopId) {
+            try {
+                const response = await fetch(`${scriptUrl}?stopId=${stopId}`);
+                const data = await response.json();
+                const container = document.getElementById(`val-${stopId}`);
+                
+                if(!data.time || data.time === "Brak") {
+                    container.innerHTML = '<span style="font-size:12px; color:#95a5a6">Brak danych</span>';
+                } else {
+                    container.innerHTML = `<span class="line">${data.line}</span><span class="time">${data.time}</span>`;
                 }
-            });
+            } catch (e) {
+                console.error("Błąd dla stopId " + stopId, e);
+            }
         }
 
-        refreshData();
-        setInterval(refreshData, 30000); // Odświeżaj co 30 sekund
+        function updateAll() {
+            stops.forEach(fetchLive);
+        }
+
+        // Pierwsze pobranie danych
+        updateAll();
+        
+        // Automatyczne odświeżanie co 30 sekund [cite: 78]
+        setInterval(updateAll, 30000);
     </script>
 </body>
 </html>
