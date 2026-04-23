@@ -2,155 +2,71 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rozkład Farskie</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    <title>Rozkłady GZM</title>
     <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --tile-color: #ffffff;
-            --text-light: #ffffff;
-            --text-dark: #1c1e21;
-        }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: var(--bg-color); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px;
-            margin: 0;
-            min-height: 100vh;
-        }
-        h2 { 
-            color: var(--text-dark); 
-            margin-top: 40px;
-            margin-bottom: 25px;
-            font-weight: 700;
-            text-align: center;
-        }
-        .grid { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 12px; 
-            width: 100%; 
-            max-width: 450px; 
-            margin-bottom: 100px; 
-        }
+        body { font-family: sans-serif; background: #f4f4f9; margin: 0; padding: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .tile { 
-            padding: 20px 18px; 
-            text-decoration: none; 
-            border-radius: 18px; 
-            font-weight: 700; 
-            font-size: 17px;
-            display: flex;
-            align-items: center;
-            color: var(--text-light);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.1s;
-            text-transform: uppercase;
+            background: white; border-radius: 12px; padding: 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-decoration: none; color: #333;
         }
-        .tile:active {
-            transform: scale(0.97);
-            filter: brightness(0.9);
-        }
-        
-        /* KOLORY ZGODNE Z GRAFIKĄ */
-        .bg-blue { background-color: #448aff; }   
-        .bg-green { background-color: #4caf50; }  
-        .bg-purple { background-color: #9c27b0; } 
-        .bg-orange { background-color: #ff9800; } 
-        .bg-yellow { background-color: #ffc107; } 
-        .bg-red { background-color: #e53935; }    
-
-        .icon {
-            background: rgba(255, 255, 255, 0.2);
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-            font-size: 22px;
-        }
-        .arrow {
-            margin-left: auto;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 20px;
-        }
-
-        /* PRZYCISK GRUPY FB */
-        .fb-button {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 65px;
-            height: 65px;
-            background-color: white;
-            border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: transform 0.2s;
-            border: 2px solid #448aff;
-            overflow: hidden;
-        }
-        .fb-button:active { transform: scale(0.85); }
-        .fb-button img { width: 100%; height: 100%; object-fit: cover; }
+        .stop-info { display: flex; flex-direction: column; }
+        .name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .realtime { color: #d32f2f; font-weight: bold; font-size: 18px; text-align: right; }
+        .line { background: #ffcc00; padding: 2px 6px; border-radius: 4px; font-size: 14px; margin-right: 5px; }
     </style>
 </head>
 <body>
-
-    <h2>ROZKŁADY FARSKIE POLA</h2>
-    
     <div class="grid">
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile bg-blue" target="_blank">
-            <div class="icon">🏁</div>
-            <span>Granica &rarr; Knurowa</span>
-            <div class="arrow">›</div>
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile">
+            <div class="stop-info">
+                <span class="name">Granica → Knurów</span>
+                <small>Kliknij po pełny rozkład</small>
+            </div>
+            <div class="realtime" id="val-723">...</div>
         </a>
-        
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile bg-green" target="_blank">
-            <div class="icon">🎒</div>
-            <span>Granica &rarr; Gierałtowic</span>
-            <div class="arrow">›</div>
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile">
+            <div class="stop-info">
+                <span class="name">Granica → Szkoła</span>
+            </div>
+            <div class="realtime" id="val-724">...</div>
         </a>
-
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8253/" class="tile bg-purple" target="_blank">
-            <div class="icon">🏭</div>
-            <span>Rybna &rarr; Knurowa</span>
-            <div class="arrow">›</div>
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile">
+            <div class="stop-info">
+                <span class="name">Szkoła → Dom</span>
+            </div>
+            <div class="realtime" id="val-725">...</div>
         </a>
-        
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8254/" class="tile bg-orange" target="_blank">
-            <div class="icon">🐟</div>
-            <span>Rybna &rarr; Gierałtowic</span>
-            <div class="arrow">›</div>
-        </a>
-        
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile bg-yellow" target="_blank">
-            <div class="icon">🏠</div>
-            <span>Gierałtowice szkoła &rarr; Domu</span>
-            <div class="arrow">›</div>
-        </a>
-        
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile bg-red" target="_blank">
-            <div class="icon">📮</div>
-            <span>Knurów poczta &rarr; Domu</span>
-            <div class="arrow">›</div>
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile">
+            <div class="stop-info">
+                <span class="name">Poczta → Dom</span>
+            </div>
+            <div class="realtime" id="val-3704">...</div>
         </a>
     </div>
 
-    <a href="https://www.facebook.com/groups/1190086025805323" target="_blank" class="fb-button">
-        <img src="logo.jpg" alt="Grupa Farskie Pola">
-    </a>
+    <script>
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwMPI5S4T7QVtQY2akxZYSnc584uHTYL3l0wvIM1ZcIgmQ4wxpiu9DQnm5iSg6Rv9E/exec';
+        const stops = ['723', '724', '725', '3704'];
 
+        async function refreshData() {
+            stops.forEach(async (id) => {
+                try {
+                    const response = await fetch(`${scriptUrl}?stopId=${id}`);
+                    const data = await response.json();
+                    document.getElementById(`val-${id}`).innerHTML = 
+                        `<span class="line">${data.line}</span> ${data.time}`;
+                } catch (e) {
+                    document.getElementById(`val-${id}`).innerText = '--';
+                }
+            });
+        }
+
+        refreshData();
+        setInterval(refreshData, 30000); // Odświeżaj co 30 sekund
+    </script>
 </body>
 </html>
