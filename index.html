@@ -1,106 +1,249 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>GZM Live</title>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3448/3448339.png">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3448/3448339.png">
-    
-    <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
-        .header { font-size: 22px; font-weight: bold; margin: 10px 0 20px 0; text-align: center; color: #1a1a1a; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        
-        .tile { 
-            background: white; border-radius: 16px; padding: 18px; 
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; color: #333;
-            border-left: 8px solid #ffcc00; transition: transform 0.1s;
-        }
-        .tile:active { transform: scale(0.97); }
-        
-        .stop-info { display: flex; flex-direction: column; flex: 1; }
-        .name { font-weight: 700; font-size: 16px; color: #2c3e50; }
-        .label { font-size: 11px; color: #95a5a6; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .realtime { text-align: right; min-width: 90px; }
-        .line { background: #333; color: white; padding: 4px 8px; border-radius: 6px; font-size: 14px; font-weight: bold; margin-right: 6px; display: inline-block; vertical-align: middle; }
-        .time { color: #d32f2f; font-weight: 800; font-size: 19px; display: inline-block; vertical-align: middle; }
-        
-        .loading { color: #bdc3c7; font-style: italic; font-size: 13px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Rozkład Jazdy & Pogoda Osiedlowa</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --temp-blue: #38bdf8;
+      --bus-btn: #1e3a8a;
+      --bus-btn-hover: #2563eb;
+      --fb-blue: #1877f2;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Logo i Nagłówek */
+    .header-box {
+      text-align: center;
+      padding: 10px 0 4px 0;
+    }
+    .header-box a {
+      display: inline-block;
+      text-decoration: none;
+    }
+    .osiedle-logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 2px solid var(--card-border);
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+    .osiedle-logo:active {
+      transform: scale(0.95);
+    }
+    .header-box h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .header-box p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Kafel Pogodowy */
+    .weather-card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 22px 18px;
+      text-align: center;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .weather-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .weather-temp {
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: var(--temp-blue);
+      line-height: 1.1;
+      margin: 6px 0;
+    }
+    .weather-details {
+      display: flex;
+      justify-content: space-around;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      border-top: 1px solid var(--card-border);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+
+    /* Sekcje Przycisków */
+    .section-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-left: 4px;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      color: var(--text);
+      text-decoration: none;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      font-size: 0.98rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active {
+      transform: scale(0.98);
+      background: #273549;
+    }
+    .btn-bus {
+      border-left: 5px solid #0284c7;
+    }
+    .btn-fb {
+      background: var(--fb-blue);
+      border: none;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(24, 119, 242, 0.3);
+    }
+    .btn-fb:active {
+      background: #1464cc;
+    }
+    .btn-icon {
+      font-size: 1.1rem;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      padding-top: 4px;
+    }
+  </style>
 </head>
 <body>
-    <div class="header">GZM Live - Twoje Odjazdy</div>
+
+  <div class="container">
     
-    <div class="grid">
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile">
-            <div class="stop-info">
-                <span class="name">Granica → Knurowa</span>
-                <span class="label">Pełny rozkład ↗</span>
-            </div>
-            <div class="realtime" id="val-723"><span class="loading">Sprawdzam...</span></div>
-        </a>
+    <!-- Nagłówek i Logo do grupy na FB -->
+    <header class="header-box">
+      <!-- Wklej link do Waszej grupy sąsiedzkiej na FB -->
+      <a href="https://www.facebook.com/groups/TWOJA_GRUPA_FB" target="_blank" rel="noopener">
+        <!-- Upewnij się, że plik logo.png (lub np. logo.jpg) znajduje się w Twoim repozytorium GitHub -->
+        <img src="logo.png" alt="Logo Osiedla" class="osiedle-logo" onerror="this.style.display='none'">
+      </a>
+      <h1>Osiedle – Pulpit Sąsiedzki</h1>
+      <p>Kliknij w logo, aby przejść do grupy na Facebooku</p>
+    </header>
 
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile">
-            <div class="stop-info">
-                <span class="name">Granica → Szkoła</span>
-                <span class="label">Pełny rozkład ↗</span>
-            </div>
-            <div class="realtime" id="val-724"><span class="loading">...</span></div>
-        </a>
-
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile">
-            <div class="stop-info">
-                <span class="name">Szkoła → Dom</span>
-                <span class="label">Pełny rozkład ↗</span>
-            </div>
-            <div class="realtime" id="val-725"><span class="loading">...</span></div>
-        </a>
-
-        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile">
-            <div class="stop-info">
-                <span class="name">Poczta → Dom</span>
-                <span class="label">Pełny rozkład ↗</span>
-            </div>
-            <div class="realtime" id="val-3704"><span class="loading">...</span></div>
-        </a>
+    <!-- Kafel Temperatury i Wilgotności -->
+    <div class="weather-card">
+      <div class="weather-title">🌡️ Stacja Pogodowa Zewnętrzna</div>
+      <div id="temp" class="weather-temp">--.-°C</div>
+      <div class="weather-details">
+        <span id="hum">💧 Wilgotność: --%</span>
+        <span id="time">🕒 --:--</span>
+      </div>
     </div>
 
-    <script>
-        // Twój link ze skryptu Google Apps Script
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwSou13l30JxLNszhQP0VbPXHM2e1cVGJZzEsfCIk1ljA_4eARNY9kb1kiAguahdn4/exec';
-        const stops = ['723', '724', '725', '3704'];
+    <!-- Przyciski z rozkładami jazdy / przystankami -->
+    <div class="section-title">🚏 Przystanki & Rozkłady Jazdy</div>
+    <div class="btn-group">
+      <!-- Podmień adresy URL na swoje docelowe linki do przystanków -->
+      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
+        <span>🚏 Przystanek: Farskie Pola (Kierunek 1)</span>
+        <span class="btn-icon">➔</span>
+      </a>
+      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
+        <span>🚏 Przystanek: Farskie Pola (Kierunek 2)</span>
+        <span class="btn-icon">➔</span>
+      </a>
+      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
+        <span>🕒 Główny Rozkład ZTM Metropolia</span>
+        <span class="btn-icon">➔</span>
+      </a>
+    </div>
 
-        async function fetchLive(stopId) {
-            try {
-                const response = await fetch(`${scriptUrl}?stopId=${stopId}`);
-                const data = await response.json();
-                const container = document.getElementById(`val-${stopId}`);
-                
-                if(!data.time || data.time === "Brak") {
-                    container.innerHTML = '<span style="font-size:12px; color:#95a5a6">Brak danych</span>';
-                } else {
-                    container.innerHTML = `<span class="line">${data.line}</span><span class="time">${data.time}</span>`;
-                }
-            } catch (e) {
-                console.error("Błąd dla stopId " + stopId, e);
-            }
+    <!-- Grupa na Facebooku -->
+    <div class="section-title">👥 Społeczność</div>
+    <a class="btn btn-fb" href="https://www.facebook.com/groups/TWOJA_GRUPA_FB" target="_blank" rel="noopener">
+      <span>💬 Grupa Mieszkańców na Facebooku</span>
+    </a>
+
+    <div class="footer">
+      Odczyt stacji aktualizuje się samoczynnie w tle.
+    </div>
+
+  </div>
+
+  <script>
+    // Link do Twojego wdrożonego skryptu Google Apps Script z dopiskiem ?format=json
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxOTfaDTGA5dzjDssUOhi-ayZy3qQhR1KGZrAeTP4bxuMeriAmMGvPl3A0vo6rlSpbz/exec?format=json";
+
+    async function odswiezTemperature() {
+      try {
+        const res = await fetch(GAS_URL);
+        const data = await res.json();
+
+        if (data.temp !== undefined) {
+          const t = data.temp.toString();
+          document.getElementById('temp').innerText = t.includes('°') ? t : `${t}°C`;
         }
-
-        function updateAll() {
-            stops.forEach(fetchLive);
+        if (data.hum !== undefined) {
+          document.getElementById('hum').innerText = `💧 Wilgotność: ${data.hum}%`;
         }
+        if (data.time) {
+          document.getElementById('time').innerText = `🕒 ${data.time}`;
+        }
+      } catch (err) {
+        console.error("Błąd odczytu stacji:", err);
+      }
+    }
 
-        // Pierwsze pobranie danych
-        updateAll();
-        
-        // Automatyczne odświeżanie co 30 sekund [cite: 78]
-        setInterval(updateAll, 30000);
-    </script>
+    // Pierwsze pobranie przy otwarciu strony
+    odswiezTemperature();
+
+    // Automatyczne odświeżanie w tle co 60 sekund
+    setInterval(odswiezTemperature, 60000);
+  </script>
+
 </body>
 </html>
