@@ -165,13 +165,11 @@
     
     <!-- Nagłówek i Logo do grupy na FB -->
     <header class="header-box">
-      <!-- Wklej link do Waszej grupy sąsiedzkiej na FB -->
-      <a href="https://www.facebook.com/groups/TWOJA_GRUPA_FB" target="_blank" rel="noopener">
-        <!-- Upewnij się, że plik logo.png (lub np. logo.jpg) znajduje się w Twoim repozytorium GitHub -->
-        <img src="logo.png" alt="Logo Osiedla" class="osiedle-logo" onerror="this.style.display='none'">
+      <a href="https://www.facebook.com/groups/farskiepola" target="_blank" rel="noopener">
+        <img src="logo.jpg" alt="Logo Osiedla" class="osiedle-logo" onerror="this.style.display='none'">
       </a>
-      <h1>Osiedle – Pulpit Sąsiedzki</h1>
-      <p>Kliknij w logo, aby przejść do grupy na Facebooku</p>
+      <h1>Farskie Pola – Pulpit Sąsiedzki</h1>
+      <p>Kliknij logo, aby przejść do grupy FB</p>
     </header>
 
     <!-- Kafel Temperatury i Wilgotności -->
@@ -187,35 +185,33 @@
     <!-- Przyciski z rozkładami jazdy / przystankami -->
     <div class="section-title">🚏 Przystanki & Rozkłady Jazdy</div>
     <div class="btn-group">
-      <!-- Podmień adresy URL na swoje docelowe linki do przystanków -->
       <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🚏 Przystanek: Farskie Pola (Kierunek 1)</span>
+        <span>🚏 Przystanek: Farskie Pola (Kierunek Gliwice)</span>
         <span class="btn-icon">➔</span>
       </a>
       <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🚏 Przystanek: Farskie Pola (Kierunek 2)</span>
+        <span>🚏 Przystanek: Farskie Pola (Kierunek Knurów)</span>
         <span class="btn-icon">➔</span>
       </a>
       <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🕒 Główny Rozkład ZTM Metropolia</span>
+        <span>🕒 Rozkład Jazdy ZTM</span>
         <span class="btn-icon">➔</span>
       </a>
     </div>
 
     <!-- Grupa na Facebooku -->
     <div class="section-title">👥 Społeczność</div>
-    <a class="btn btn-fb" href="https://www.facebook.com/groups/TWOJA_GRUPA_FB" target="_blank" rel="noopener">
+    <a class="btn btn-fb" href="https://www.facebook.com/groups/farskiepola" target="_blank" rel="noopener">
       <span>💬 Grupa Mieszkańców na Facebooku</span>
     </a>
 
     <div class="footer">
-      Odczyt stacji aktualizuje się samoczynnie w tle.
+      Odczyt stacji aktualizuje się samoczynnie w tle co minutę.
     </div>
 
   </div>
 
   <script>
-    // Link do Twojego wdrożonego skryptu Google Apps Script z dopiskiem ?format=json
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxOTfaDTGA5dzjDssUOhi-ayZy3qQhR1KGZrAeTP4bxuMeriAmMGvPl3A0vo6rlSpbz/exec?format=json";
 
     async function odswiezTemperature() {
@@ -238,7 +234,7 @@
       }
     }
 
-    // Pierwsze pobranie przy otwarciu strony
+    // Pierwsze pobranie przy starcie strony
     odswiezTemperature();
 
     // Automatyczne odświeżanie w tle co 60 sekund
