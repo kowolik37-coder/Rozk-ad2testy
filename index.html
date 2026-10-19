@@ -1,245 +1,246 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Rozkład Jazdy & Pogoda Osiedlowa</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --temp-blue: #38bdf8;
-      --bus-btn: #1e3a8a;
-      --bus-btn-hover: #2563eb;
-      --fb-blue: #1877f2;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rozkład Farskie</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 16px;
-    }
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --tile-color: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #1c1e21;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        h2 { 
+            color: var(--text-dark); 
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: 700; 
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 440px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+        /* DYSKRETNY KAEL STACJI POGODOWEJ */
+        .weather-tile {
+            width: 100%;
+            max-width: 450px;
+            background: var(--tile-color);
+            border-radius: 18px;
+            padding: 14px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+        }
+        .weather-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .weather-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+        .weather-temp {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e88e5;
+            line-height: 1;
+        }
+        .weather-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+        }
+        .weather-hum {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+        .weather-time {
+            font-size: 11px;
+            font-weight: 500;
+            color: #9ca3af;
+        }
 
-    /* Logo i Nagłówek */
-    .header-box {
-      text-align: center;
-      padding: 10px 0 4px 0;
-    }
-    .header-box a {
-      display: inline-block;
-      text-decoration: none;
-    }
-    .osiedle-logo {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      border: 2px solid var(--card-border);
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-    .osiedle-logo:active {
-      transform: scale(0.95);
-    }
-    .header-box h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-top: 8px;
-    }
-    .header-box p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 12px; 
+            width: 100%; 
+            max-width: 450px; 
+            margin-bottom: 100px; 
+        }
+        .tile { 
+            padding: 20px 18px; 
+            text-decoration: none; 
+            border-radius: 18px; 
+            font-weight: 700; 
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+            text-transform: uppercase;
+        }
+        .tile:active {
+            transform: scale(0.97);
+            filter: brightness(0.9);
+        }
+        
+        /* KOLORY ZGODNE Z GRAFIKĄ */
+        .bg-blue { background-color: #448aff; }   
+        .bg-green { background-color: #4caf50; }  
+        .bg-purple { background-color: #9c27b0; } 
+        .bg-orange { background-color: #ff9800; } 
+        .bg-yellow { background-color: #ffc107; } 
+        .bg-red { background-color: #e53935; }    
 
-    /* Kafel Pogodowy */
-    .weather-card {
-      background: var(--card-bg);
-      border-radius: 22px;
-      padding: 22px 18px;
-      text-align: center;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-    .weather-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .weather-temp {
-      font-size: 3.6rem;
-      font-weight: 800;
-      color: var(--temp-blue);
-      line-height: 1.1;
-      margin: 6px 0;
-    }
-    .weather-details {
-      display: flex;
-      justify-content: space-around;
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      border-top: 1px solid var(--card-border);
-      padding-top: 10px;
-      margin-top: 8px;
-    }
+        .icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 22px;
+        }
+        .arrow {
+            margin-left: auto;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 20px;
+        }
 
-    /* Sekcje Przycisków */
-    .section-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      font-weight: 700;
-      margin-left: 4px;
-    }
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-bg);
-      color: var(--text);
-      text-decoration: none;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border: 1px solid var(--card-border);
-      font-size: 0.98rem;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn:active {
-      transform: scale(0.98);
-      background: #273549;
-    }
-    .btn-bus {
-      border-left: 5px solid #0284c7;
-    }
-    .btn-fb {
-      background: var(--fb-blue);
-      border: none;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 14px rgba(24, 119, 242, 0.3);
-    }
-    .btn-fb:active {
-      background: #1464cc;
-    }
-    .btn-icon {
-      font-size: 1.1rem;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #64748b;
-      padding-top: 4px;
-    }
-  </style>
+        /* PRZYCISK GRUPY FB */
+        .fb-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 65px;
+            height: 65px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 0.2s;
+            border: 2px solid #448aff;
+            overflow: hidden;
+        }
+        .fb-button:active { transform: scale(0.85); }
+        .fb-button img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
 </head>
 <body>
 
-  <div class="container">
+    <h2>ROZKŁADY FARSKIE POLA</h2>
     
-    <!-- Nagłówek i Logo do grupy na FB -->
-    <header class="header-box">
-      <a href="https://www.facebook.com/groups/farskiepola" target="_blank" rel="noopener">
-        <img src="logo.jpg" alt="Logo Osiedla" class="osiedle-logo" onerror="this.style.display='none'">
-      </a>
-      <h1>Farskie Pola – Pulpit Sąsiedzki</h1>
-      <p>Kliknij logo, aby przejść do grupy FB</p>
-    </header>
-
-    <!-- Kafel Temperatury i Wilgotności -->
-    <div class="weather-card">
-      <div class="weather-title">🌡️ Stacja Pogodowa Zewnętrzna</div>
-      <div id="temp" class="weather-temp">--.-°C</div>
-      <div class="weather-details">
-        <span id="hum">💧 Wilgotność: --%</span>
-        <span id="time">🕒 --:--</span>
-      </div>
+    <!-- STACJA POGODOWA -->
+    <div class="weather-tile">
+        <div class="weather-left">
+            <span class="weather-icon">🌡️</span>
+            <span id="temp" class="weather-temp">--.-°C</span>
+        </div>
+        <div class="weather-right">
+            <span id="hum" class="weather-hum">💧 Wilgotność: --%</span>
+            <span id="time" class="weather-time">🕒 Odczyt z --:--</span>
+        </div>
     </div>
 
-    <!-- Przyciski z rozkładami jazdy / przystankami -->
-    <div class="section-title">🚏 Przystanki & Rozkłady Jazdy</div>
-    <div class="btn-group">
-      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🚏 Przystanek: Farskie Pola (Kierunek Gliwice)</span>
-        <span class="btn-icon">➔</span>
-      </a>
-      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🚏 Przystanek: Farskie Pola (Kierunek Knurów)</span>
-        <span class="btn-icon">➔</span>
-      </a>
-      <a class="btn btn-bus" href="https://rj.metropoliaztm.pl/" target="_blank">
-        <span>🕒 Rozkład Jazdy ZTM</span>
-        <span class="btn-icon">➔</span>
-      </a>
+    <!-- KAFELKI PRZYSTANKÓW -->
+    <div class="grid">
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/723/" class="tile bg-blue" target="_blank">
+            <div class="icon">🏁</div>
+            <span>Granica &rarr; Knurowa</span>
+            <div class="arrow">›</div>
+        </a>
+        
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/724/" class="tile bg-green" target="_blank">
+            <div class="icon">🎒</div>
+            <span>Granica &rarr; Gierałtowic</span>
+            <div class="arrow">›</div>
+        </a>
+
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8253/" class="tile bg-purple" target="_blank">
+            <div class="icon">🏭</div>
+            <span>Rybna &rarr; Knurowa</span>
+            <div class="arrow">›</div>
+        </a>
+        
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/8254/" class="tile bg-orange" target="_blank">
+            <div class="icon">🐟</div>
+            <span>Rybna &rarr; Gierałtowic</span>
+            <div class="arrow">›</div>
+        </a>
+        
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/725/" class="tile bg-yellow" target="_blank">
+            <div class="icon">🏠</div>
+            <span>Gierałtowice szkoła &rarr; Dom</span>
+            <div class="arrow">›</div>
+        </a>
+        
+        <a href="https://rj.transportgzm.pl/v2/rozklady/przystanek/stop/3704/" class="tile bg-red" target="_blank">
+            <div class="icon">📮</div>
+            <span>Knurów poczta &rarr; Dom</span>
+            <div class="arrow">›</div>
+        </a>
     </div>
 
-    <!-- Grupa na Facebooku -->
-    <div class="section-title">👥 Społeczność</div>
-    <a class="btn btn-fb" href="https://www.facebook.com/groups/farskiepola" target="_blank" rel="noopener">
-      <span>💬 Grupa Mieszkańców na Facebooku</span>
+    <!-- PRZYCISK LOGO FB W ROGU -->
+    <a href="https://www.facebook.com/groups/1190086025805323" target="_blank" class="fb-button">
+        <img src="logo.jpg" alt="Grupa Farskie Pola">
     </a>
 
-    <div class="footer">
-      Odczyt stacji aktualizuje się samoczynnie w tle co minutę.
-    </div>
+    <!-- SKRYPT ODCZYTU POGODY -->
+    <script>
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxOTfaDTGA5dzjDssUOhi-ayZy3qQhR1KGZrAeTP4bxuMeriAmMGvPl3A0vo6rlSpbz/exec?format=json";
 
-  </div>
+        async function odswiezTemperature() {
+            try {
+                const res = await fetch(GAS_URL);
+                const data = await res.json();
 
-  <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxOTfaDTGA5dzjDssUOhi-ayZy3qQhR1KGZrAeTP4bxuMeriAmMGvPl3A0vo6rlSpbz/exec?format=json";
-
-    async function odswiezTemperature() {
-      try {
-        const res = await fetch(GAS_URL);
-        const data = await res.json();
-
-        if (data.temp !== undefined) {
-          const t = data.temp.toString();
-          document.getElementById('temp').innerText = t.includes('°') ? t : `${t}°C`;
+                if (data.temp !== undefined) {
+                    const t = data.temp.toString();
+                    document.getElementById('temp').innerText = t.includes('°') ? t : `${t}°C`;
+                }
+                if (data.hum !== undefined) {
+                    document.getElementById('hum').innerText = `💧 Wilgotność: ${data.hum}%`;
+                }
+                if (data.time) {
+                    document.getElementById('time').innerText = `🕒 Odczyt z ${data.time}`;
+                }
+            } catch (err) {
+                console.error("Błąd odczytu stacji:", err);
+            }
         }
-        if (data.hum !== undefined) {
-          document.getElementById('hum').innerText = `💧 Wilgotność: ${data.hum}%`;
-        }
-        if (data.time) {
-          document.getElementById('time').innerText = `🕒 ${data.time}`;
-        }
-      } catch (err) {
-        console.error("Błąd odczytu stacji:", err);
-      }
-    }
 
-    // Pierwsze pobranie przy starcie strony
-    odswiezTemperature();
-
-    // Automatyczne odświeżanie w tle co 60 sekund
-    setInterval(odswiezTemperature, 60000);
-  </script>
+        odswiezTemperature();
+        setInterval(odswiezTemperature, 60000);
+    </script>
 
 </body>
 </html>
