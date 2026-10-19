@@ -22,58 +22,81 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 20px;
+            padding: 16px;
             margin: 0;
             min-height: 100vh;
         }
         h2 { 
             color: var(--text-dark); 
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-weight: 700; 
+            margin-top: 24px;
+            margin-bottom: 18px;
+            font-weight: 800; 
             text-align: center;
             letter-spacing: 0.5px;
+            font-size: 1.35rem;
         }
 
-        /* DYSKRETNY KAEL STACJI POGODOWEJ */
+        /* ULEPSZONY, STABILNY KAFEL POGODOWY */
         .weather-tile {
             width: 100%;
             max-width: 450px;
             background: var(--tile-color);
-            border-radius: 18px;
-            padding: 14px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.07);
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-sizing: border-box;
             margin-bottom: 16px;
+            gap: 12px;
         }
+        
         .weather-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
+            white-space: nowrap;
         }
         .weather-icon {
-            font-size: 28px;
+            font-size: 26px;
             line-height: 1;
         }
         .weather-temp {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: #1e88e5;
             line-height: 1;
+            letter-spacing: -0.5px;
         }
+
+        /* Dyskretna pionowa kreska dzieląca */
+        .weather-divider {
+            width: 1px;
+            height: 34px;
+            background-color: #e5e7eb;
+            flex-shrink: 0;
+        }
+
         .weather-right {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
+            justify-content: center;
+            white-space: nowrap;
             gap: 3px;
         }
         .weather-hum {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 700;
-            color: #4b5563;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .weather-hum b {
+            color: #0284c7;
+            font-weight: 800;
         }
         .weather-time {
             font-size: 11px;
@@ -90,11 +113,11 @@
             margin-bottom: 100px; 
         }
         .tile { 
-            padding: 20px 18px; 
+            padding: 18px 16px; 
             text-decoration: none; 
             border-radius: 18px; 
             font-weight: 700; 
-            font-size: 17px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             color: var(--text-light);
@@ -107,41 +130,43 @@
             filter: brightness(0.9);
         }
         
-        /* KOLORY ZGODNE Z GRAFIKĄ */
-        .bg-blue { background-color: #448aff; }   
-        .bg-green { background-color: #4caf50; }  
+        /* KOLORY KAFELKÓW */
+        .bg-blue   { background-color: #448aff; }   
+        .bg-green  { background-color: #4caf50; }  
         .bg-purple { background-color: #9c27b0; } 
         .bg-orange { background-color: #ff9800; } 
         .bg-yellow { background-color: #ffc107; } 
-        .bg-red { background-color: #e53935; }    
+        .bg-red    { background-color: #e53935; }    
 
         .icon {
-            background: rgba(255, 255, 255, 0.2);
-            width: 44px;
-            height: 44px;
+            background: rgba(255, 255, 255, 0.22);
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 15px;
-            font-size: 22px;
+            margin-right: 14px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
         .arrow {
             margin-left: auto;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 20px;
+            padding-left: 8px;
         }
 
         /* PRZYCISK GRUPY FB */
         .fb-button {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 65px;
-            height: 65px;
+            bottom: 22px;
+            right: 22px;
+            width: 62px;
+            height: 62px;
             background-color: white;
             border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.28);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -158,14 +183,17 @@
 
     <h2>ROZKŁADY FARSKIE POLA</h2>
     
-    <!-- STACJA POGODOWA -->
+    <!-- ZGRABNY, NIEROZJEŻDŻAJĄCY SIĘ KAFEL POGODY -->
     <div class="weather-tile">
         <div class="weather-left">
             <span class="weather-icon">🌡️</span>
             <span id="temp" class="weather-temp">--.-°C</span>
         </div>
+        
+        <div class="weather-divider"></div>
+
         <div class="weather-right">
-            <span id="hum" class="weather-hum">💧 Wilgotność: --%</span>
+            <span class="weather-hum">💧 Wilgotność: <b id="hum">--%</b></span>
             <span id="time" class="weather-time">🕒 Odczyt z --:--</span>
         </div>
     </div>
@@ -228,7 +256,8 @@
                     document.getElementById('temp').innerText = t.includes('°') ? t : `${t}°C`;
                 }
                 if (data.hum !== undefined) {
-                    document.getElementById('hum').innerText = `💧 Wilgotność: ${data.hum}%`;
+                    const h = data.hum.toString();
+                    document.getElementById('hum').innerText = h.includes('%') ? h : `${h}%`;
                 }
                 if (data.time) {
                     document.getElementById('time').innerText = `🕒 Odczyt z ${data.time}`;
